@@ -1,0 +1,51 @@
+service: championship-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  memorySize: 512
+  timeout: 10
+  environment:
+    MONGO_URI: ${env:MONGO_URI}
+    COGNITO_POOL_ID: ${env:COGNITO_POOL_ID}
+
+plugins:
+  - serverless-esbuild
+
+functions:
+  registerMatchEvent:
+    handler: src/presentation/lambdas/registerMatchEventHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/events
+          method: post
+
+  getMatchSnapshot:
+    handler: src/presentation/lambdas/getMatchSnapshotHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/live
+          method: get
+
+  voteCraque:
+    handler: src/presentation/lambdas/voteCraqueHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/vote
+          method: post
+
+package:
+  individually: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    exclude:
+      - aws-sdk
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
