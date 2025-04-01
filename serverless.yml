@@ -9,9 +9,17 @@ provider:
   memorySize: 512
   timeout: 30
   stage: ${opt:stage, 'dev'}
+
+  deploymentBucket:
+    name: campeonato-manager-deployment-bucket
+    blockPublicAccess: true
+    versioning: true
+    serverSideEncryption: AES256
+
   environment:
     NODE_ENV: ${self:provider.stage}
     MONGO_URI: ${env:MONGO_URI}
+
   iam:
     role:
       statements:
@@ -21,6 +29,7 @@ provider:
             - apigateway:*
             - logs:*
             - iam:PassRole
+            - s3:*
           Resource: '*'
 
 build:
