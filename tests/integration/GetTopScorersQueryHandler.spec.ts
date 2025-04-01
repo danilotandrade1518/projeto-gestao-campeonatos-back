@@ -1,10 +1,15 @@
 import { GetTopScorersQueryHandler } from '../../src/application/queries/GetTopScorersQueryHandler';
 import { MongoTopScorerDAO } from '../../src/infrastructure/dao/MongoTopScorerDAO';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 
 describe('GetTopScorersQueryHandler', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should return the top scorers', async () => {

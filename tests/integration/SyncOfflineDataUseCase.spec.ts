@@ -1,7 +1,7 @@
 import { MatchEventType } from '../../src/domain/events/MatchEvent';
 import { Match } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 import { SyncOfflineDataUseCase } from './../../src/application/usecases/SyncOfflineDataUseCase';
 import { MongoMatchEventRepository } from './../../src/infrastructure/persistence/MongoMatchEventRepository';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
@@ -9,6 +9,11 @@ import { MongoMatchRepository } from './../../src/infrastructure/persistence/Mon
 describe('SyncOfflineDataUseCase', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should sync offline events', async () => {

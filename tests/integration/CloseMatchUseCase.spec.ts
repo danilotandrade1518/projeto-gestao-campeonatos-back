@@ -1,12 +1,17 @@
 import { Match, MatchStatus } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 import { CloseMatchUseCase } from './../../src/application/usecases/CloseMatchUseCase';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
 
 describe('CloseMatchUseCase', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should close the match', async () => {

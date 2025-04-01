@@ -1,6 +1,6 @@
 import { MatchEventType } from '../../src/domain/events/MatchEvent';
 import { Team } from '../../src/domain/match/Team';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 import { RegisterMatchEventUseCase } from './../../src/application/usecases/RegisterMatchEventUseCase';
 import { Match } from './../../src/domain/match/Match';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
@@ -15,6 +15,11 @@ const makeFakeMatch = () =>
 describe('RegisterMatchEventUseCase (integration)', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should register an event correctly', async () => {

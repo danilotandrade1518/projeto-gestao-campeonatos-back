@@ -1,12 +1,17 @@
 import { Match, MatchPeriod } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 import { StartSecondHalfUseCase } from './../../src/application/usecases/StartSecondHalfUseCase';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
 
 describe('StartSecondHalfUseCase', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should start the second half', async () => {

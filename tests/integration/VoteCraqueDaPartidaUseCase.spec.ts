@@ -1,6 +1,6 @@
 import { Match } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 import { VoteCraqueDaPartidaUseCase } from './../../src/application/usecases/VoteCraqueDaPartidaUseCase';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
 import { MongoVoteRepository } from './../../src/infrastructure/persistence/MongoVoteRepository';
@@ -8,6 +8,11 @@ import { MongoVoteRepository } from './../../src/infrastructure/persistence/Mong
 describe('VoteCraqueDaPartidaUseCase', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should register a vote', async () => {

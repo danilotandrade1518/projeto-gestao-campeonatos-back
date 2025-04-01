@@ -1,10 +1,15 @@
 import { GetPublicMatchDetailsQueryHandler } from '../../src/application/queries/GetPublicMatchDetailsQueryHandler';
 import { MongoMatchDetailsDAO } from '../../src/infrastructure/dao/MongoMatchDetailsDAO';
-import { db } from '../../src/shared/config';
+import { client, db } from '../../src/shared/config';
 
 describe('GetPublicMatchDetailsQueryHandler', () => {
   beforeAll(async () => {
     await db.dropDatabase();
+  });
+
+  afterAll(async () => {
+    await client.close();
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 
   it('should return public match details', async () => {
