@@ -19,7 +19,7 @@ jobs:
       - run: npm run build
 
       - name: Deploy
-        run: npx serverless deploy --stage ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
+        run: npx serverless deploy --stage ${{ github.ref_name == 'main' && 'prod' || 'dev' }} --ci
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
