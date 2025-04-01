@@ -1,51 +1,115 @@
-service: championship-app
+service: campeonato-manager
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
   memorySize: 512
-  timeout: 10
+  timeout: 30
+  stage: ${opt:stage, 'dev'}
   environment:
+    NODE_ENV: ${self:provider.stage}
     MONGO_URI: ${env:MONGO_URI}
-    COGNITO_POOL_ID: ${env:COGNITO_POOL_ID}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - lambda:*
+            - apigateway:*
+            - logs:*
+            - iam:PassRole
+          Resource: '*'
+
+build:
+  esbuild: false
 
 plugins:
   - serverless-esbuild
 
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: false
+    target: node18
+    platform: node
+    concurrency: 10
+
 functions:
-  registerMatchEvent:
+  startMatch:
+    handler: src/presentation/lambdas/startMatchHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/start
+          method: post
+
+  startSecondHalf:
+    handler: src/presentation/lambdas/startSecondHalfHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/start-second-half
+          method: post
+
+  closeMatch:
+    handler: src/presentation/lambdas/closeMatchHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/close
+          method: post
+
+  registerEvent:
     handler: src/presentation/lambdas/registerMatchEventHandler.handler
     events:
       - http:
           path: matches/{matchId}/events
           method: post
 
-  getMatchSnapshot:
-    handler: src/presentation/lambdas/getMatchSnapshotHandler.handler
-    events:
-      - http:
-          path: matches/{matchId}/live
-          method: get
-
   voteCraque:
-    handler: src/presentation/lambdas/voteCraqueHandler.handler
+    handler: src/presentation/lambdas/voteCraqueDaPartidaHandler.handler
     events:
       - http:
           path: matches/{matchId}/vote
           method: post
 
-package:
-  individually: true
+  syncOfflineData:
+    handler: src/presentation/lambdas/syncOfflineDataHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/sync-offline
+          method: post
 
-custom:
-  esbuild:
-    bundle: true
-    minify: true
-    sourcemap: true
-    exclude:
-      - aws-sdk
+  getClassification:
+    handler: src/presentation/lambdas/getClassificationHandler.handler
+    events:
+      - http:
+          path: classification
+          method: get
 
-plugins:
-  - serverless-esbuild
-  - serverless-offline
+  getTopScorers:
+    handler: src/presentation/lambdas/getTopScorersHandler.handler
+    events:
+      - http:
+          path: top-scorers
+          method: get
+
+  getBestGoalkeeper:
+    handler: src/presentation/lambdas/getBestGoalkeeperHandler.handler
+    events:
+      - http:
+          path: best-goalkeeper
+          method: get
+
+  getPublicMatchDetails:
+    handler: src/presentation/lambdas/getPublicMatchDetailsHandler.handler
+    events:
+      - http:
+          path: matches/{matchId}/details
+          method: get
+
+  getMatchesTable:
+    handler: src/presentation/lambdas/getMatchesTableHandler.handler
+    events:
+      - http:
+          path: matches-table
+          method: get

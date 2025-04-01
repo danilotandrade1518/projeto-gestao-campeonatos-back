@@ -43,3 +43,6 @@ tmp/
 .cache/
 build-outputs/
 ci-output/
+
+# Serverless build artifacts
+.serverless/

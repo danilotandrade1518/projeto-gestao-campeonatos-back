@@ -12,7 +12,6 @@ export const handler = async (event: any) => {
       matchId: event.pathParameters.matchId,
       teamId: body.teamId,
       type: body.type,
-      minute: body.minute,
       data: body.data,
     });
 
