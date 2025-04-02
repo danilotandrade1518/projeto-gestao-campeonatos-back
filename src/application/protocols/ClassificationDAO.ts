@@ -1,3 +1,5 @@
+import { Match } from '../../domain/match/Match';
+
 export interface TeamClassification {
   teamId: string;
   teamName: string;
@@ -14,4 +16,5 @@ export interface TeamClassification {
 
 export interface ClassificationDAO {
   getClassification(): Promise<TeamClassification[]>;
+  update(match: Match): Promise<void>;
 }

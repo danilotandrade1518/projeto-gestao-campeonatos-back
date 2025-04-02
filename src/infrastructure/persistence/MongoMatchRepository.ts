@@ -1,7 +1,8 @@
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
 import { MatchRepository } from '../../application/protocols/MatchRepository';
 import { Match } from '../../domain/match/Match';
+import { Player } from '../../domain/match/Player';
 import { Team } from '../../domain/match/Team';
 import { db } from '../../shared/config';
 
@@ -13,20 +14,40 @@ export class MongoMatchRepository implements MatchRepository {
   }
 
   async getById(matchId: string): Promise<Match | null> {
-    const doc = await this.collection.findOne({ id: matchId });
+    const doc = await this.collection.findOne({ _id: new ObjectId(matchId) });
     if (!doc) return null;
 
     return Match.restore({
-      id: doc.id,
+      id: doc._id.toHexString(),
       teamA: Team.restore({
-        id: doc.teamA.id,
+        id: doc.teamA._id.toHexString(),
         name: doc.teamA.name,
-        players: doc.teamA.players,
+        players: doc.teamA.players.map((player: any) =>
+          Player.restore({
+            id: player._id.toHexString(),
+            name: player.name,
+            position: player.position,
+            inField: player.inField,
+            yellowCards: player.yellowCards,
+            redCard: player.redCard,
+            timeInField: player.timeInField,
+          }),
+        ),
       }),
       teamB: Team.restore({
-        id: doc.teamB.id,
+        id: doc.teamB._id.toHexString(),
         name: doc.teamB.name,
-        players: doc.teamB.players,
+        players: doc.teamA.players.map((player: any) =>
+          Player.restore({
+            id: player._id.toHexString(),
+            name: player.name,
+            position: player.position,
+            inField: player.inField,
+            yellowCards: player.yellowCards,
+            redCard: player.redCard,
+            timeInField: player.timeInField,
+          }),
+        ),
       }),
       status: doc.status,
       period: doc.period,
@@ -41,19 +62,22 @@ export class MongoMatchRepository implements MatchRepository {
 
   async save(match: Match): Promise<void> {
     await this.collection.updateOne(
-      { id: match.id },
+      { _id: new ObjectId(match.id) },
       {
         $set: {
-          id: match.id,
           teamA: {
-            id: match.teamA.id,
+            _id: new ObjectId(match.teamA.id),
             name: match.teamA.name,
-            players: match.teamA.players,
+            players: match.teamA.players.map((player) =>
+              this.mapPlayer(player),
+            ),
           },
           teamB: {
-            id: match.teamB.id,
+            _id: new ObjectId(match.teamB.id),
             name: match.teamB.name,
-            players: match.teamB.players,
+            players: match.teamA.players.map((player) =>
+              this.mapPlayer(player),
+            ),
           },
           status: match.status,
           period: match.period,
@@ -67,5 +91,17 @@ export class MongoMatchRepository implements MatchRepository {
       },
       { upsert: true },
     );
+  }
+
+  private mapPlayer(player: Player) {
+    return {
+      _id: new ObjectId(player.id),
+      name: player.name,
+      position: player.position,
+      inField: player.inField,
+      yellowCards: player.yellowCards,
+      redCard: player.redCard,
+      timeInField: player.timeInField,
+    };
   }
 }

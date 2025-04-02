@@ -1,3 +1,5 @@
+import { Match } from '../../domain/match/Match';
+
 export interface TopScorer {
   playerId: string;
   playerName: string;
@@ -7,4 +9,5 @@ export interface TopScorer {
 
 export interface TopScorerDAO {
   getTopScorers(): Promise<TopScorer[]>;
+  update(match: Match): Promise<void>;
 }

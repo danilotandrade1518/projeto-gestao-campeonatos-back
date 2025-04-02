@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 import { Match, MatchStatus } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
 import { client, db } from '../../src/shared/config';
@@ -17,9 +19,9 @@ describe('StartMatchUseCase', () => {
   it('should start a match', async () => {
     const repo = new MongoMatchRepository();
     const match = new Match(
-      'm1',
-      new Team('t1', 'Team A'),
-      new Team('t2', 'Team B'),
+      faker.string.hexadecimal({ length: 24, prefix: '' }),
+      new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team A'),
+      new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team B'),
     );
 
     await repo.save(match);

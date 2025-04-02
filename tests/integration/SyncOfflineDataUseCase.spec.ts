@@ -1,8 +1,14 @@
+import { faker } from '@faker-js/faker';
+
 import { MatchEventType } from '../../src/domain/events/MatchEvent';
 import { Match } from '../../src/domain/match/Match';
 import { Team } from '../../src/domain/match/Team';
 import { client, db } from '../../src/shared/config';
+import { DefaultUpdateStatisticsService } from './../../src/application/services/DefaultUpdateStatisticsService';
 import { SyncOfflineDataUseCase } from './../../src/application/usecases/SyncOfflineDataUseCase';
+import { MongoBestGoalkeeperDAO } from './../../src/infrastructure/dao/MongoBestGoalkeeperDAO';
+import { MongoClassificationDAO } from './../../src/infrastructure/dao/MongoClassificationDAO';
+import { MongoTopScorerDAO } from './../../src/infrastructure/dao/MongoTopScorerDAO';
 import { MongoMatchEventRepository } from './../../src/infrastructure/persistence/MongoMatchEventRepository';
 import { MongoMatchRepository } from './../../src/infrastructure/persistence/MongoMatchRepository';
 
@@ -20,26 +26,36 @@ describe('SyncOfflineDataUseCase', () => {
     const matchRepo = new MongoMatchRepository();
     const eventRepo = new MongoMatchEventRepository();
     const match = new Match(
-      'm5',
-      new Team('t1', 'Team A'),
-      new Team('t2', 'Team B'),
+      faker.string.hexadecimal({ length: 24, prefix: '' }),
+      new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team A'),
+      new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team B'),
     );
     match.start();
     await matchRepo.save(match);
 
-    const useCase = new SyncOfflineDataUseCase(matchRepo, eventRepo);
+    const useCase = new SyncOfflineDataUseCase(
+      matchRepo,
+      eventRepo,
+      new DefaultUpdateStatisticsService(
+        new MongoClassificationDAO(),
+        new MongoTopScorerDAO(),
+        new MongoBestGoalkeeperDAO(),
+      ),
+    );
 
     await useCase.execute({
       matchId: match.id,
       events: [
         {
-          id: 'e1',
+          id: faker.string.hexadecimal({ length: 24, prefix: '' }),
           type: MatchEventType.GOAL,
-          teamId: 't1',
+          teamId: faker.string.hexadecimal({ length: 24, prefix: '' }),
           timestamp: new Date().toISOString(),
           period: 'FIRST_HALF',
           minute: 5,
-          data: { playerId: 'p1' },
+          data: {
+            playerId: faker.string.hexadecimal({ length: 24, prefix: '' }),
+          },
         },
       ],
     });

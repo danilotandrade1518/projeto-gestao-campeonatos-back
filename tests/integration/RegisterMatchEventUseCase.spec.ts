@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 import { MatchEventType } from '../../src/domain/events/MatchEvent';
 import { Team } from '../../src/domain/match/Team';
 import { client, db } from '../../src/shared/config';
@@ -7,9 +9,9 @@ import { MongoMatchRepository } from './../../src/infrastructure/persistence/Mon
 
 const makeFakeMatch = () =>
   new Match(
-    'match-1',
-    new Team('teamA', 'Team A'),
-    new Team('teamB', 'Team B'),
+    faker.string.hexadecimal({ length: 24, prefix: '' }),
+    new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team A'),
+    new Team(faker.string.hexadecimal({ length: 24, prefix: '' }), 'Team B'),
   );
 
 describe('RegisterMatchEventUseCase (integration)', () => {
@@ -35,7 +37,7 @@ describe('RegisterMatchEventUseCase (integration)', () => {
       matchId: match.id,
       teamId: match.teamA.id,
       type: MatchEventType.GOAL,
-      data: { playerId: 'player-1' },
+      data: { playerId: faker.string.hexadecimal({ length: 24, prefix: '' }) },
     });
 
     const updatedMatch = await repo.getById(match.id);

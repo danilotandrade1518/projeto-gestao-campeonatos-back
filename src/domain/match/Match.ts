@@ -1,4 +1,4 @@
-import { MatchEvent } from '../events/MatchEvent';
+import { MatchEvent, MatchEventType } from '../events/MatchEvent';
 import { Team } from './Team';
 
 export enum MatchPeriod {
@@ -109,6 +109,27 @@ export class Match {
     const current =
       this._status === MatchStatus.IN_PROGRESS ? this.getCurrentElapsed() : 0;
     return this._firstHalfElapsed + this._secondHalfElapsed + current;
+  }
+
+  public calculateScore(teamId: string): { points: number; goals: number } {
+    if (this.status !== MatchStatus.FINISHED) return { points: 0, goals: 0 };
+
+    const teamAGoals = this.events.filter(
+      (e) => e.type === MatchEventType.GOAL && e.teamId === this.teamA.id,
+    ).length;
+    const teamBGoals = this.events.filter(
+      (e) => e.type === MatchEventType.GOAL && e.teamId === this.teamB.id,
+    ).length;
+
+    const isTeamA = teamId === this.teamA.id;
+    const goals = isTeamA ? teamAGoals : teamBGoals;
+
+    let points = 0;
+    if (teamAGoals > teamBGoals) points = isTeamA ? 2 : 0;
+    else if (teamBGoals > teamAGoals) points = isTeamA ? 0 : 2;
+    else points = 1;
+
+    return { points, goals };
   }
 
   public addEvent(event: MatchEvent): void {

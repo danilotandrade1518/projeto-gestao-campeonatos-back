@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 import { GetMatchesTableQueryHandler } from '../../src/application/queries/GetMatchesTableQueryHandler';
 import { MongoMatchesTableDAO } from '../../src/infrastructure/dao/MongoMatchesTableDAO';
 import { client, db } from '../../src/shared/config';
@@ -13,8 +15,10 @@ describe('GetMatchesTableQueryHandler', () => {
   });
 
   it('should return the matches table', async () => {
+    const matchId = faker.string.hexadecimal({ length: 24, prefix: '' });
+
     await db.collection('matches_table').insertOne({
-      matchId: 'm1',
+      matchId,
       round: 1,
       teamA: 'Team A',
       teamB: 'Team B',
@@ -25,6 +29,6 @@ describe('GetMatchesTableQueryHandler', () => {
     const result = await handler.execute();
 
     expect(result).toHaveLength(1);
-    expect(result[0].matchId).toBe('m1');
+    expect(result[0].matchId).toBe(matchId);
   });
 });

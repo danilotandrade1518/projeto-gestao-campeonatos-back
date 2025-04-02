@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import { MatchEvent, MatchEventType } from '../../domain/events/MatchEvent';
 import { MatchStatus } from '../../domain/match/Match';
 import { MatchRepository } from '../protocols/MatchRepository';
@@ -19,7 +21,7 @@ export class RegisterMatchEventUseCase {
       throw new Error('Match is not in progress');
 
     const event = new MatchEvent(
-      crypto.randomUUID(),
+      new ObjectId().toHexString(),
       input.matchId,
       input.type,
       input.teamId,

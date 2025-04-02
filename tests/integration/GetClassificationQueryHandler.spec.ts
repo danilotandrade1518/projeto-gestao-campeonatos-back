@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 import { GetClassificationQueryHandler } from '../../src/application/queries/GetClassificationQueryHandler';
 import { MongoClassificationDAO } from '../../src/infrastructure/dao/MongoClassificationDAO';
 import { client, db } from '../../src/shared/config';
@@ -13,8 +15,10 @@ describe('GetClassificationQueryHandler', () => {
   });
 
   it('should return the classification', async () => {
+    const teamId = faker.string.hexadecimal({ length: 24, prefix: '' });
+
     await db.collection('classification').insertOne({
-      teamId: 't1',
+      teamId,
       teamName: 'Team A',
       points: 6,
       wins: 3,
@@ -33,6 +37,6 @@ describe('GetClassificationQueryHandler', () => {
     const result = await handler.execute();
 
     expect(result).toHaveLength(1);
-    expect(result[0].teamId).toBe('t1');
+    expect(result[0].teamId).toBe(teamId);
   });
 });

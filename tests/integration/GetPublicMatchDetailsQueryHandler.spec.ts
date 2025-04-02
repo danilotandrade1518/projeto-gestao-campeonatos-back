@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import { GetPublicMatchDetailsQueryHandler } from '../../src/application/queries/GetPublicMatchDetailsQueryHandler';
 import { MongoMatchDetailsDAO } from '../../src/infrastructure/dao/MongoMatchDetailsDAO';
 import { client, db } from '../../src/shared/config';
@@ -13,8 +15,10 @@ describe('GetPublicMatchDetailsQueryHandler', () => {
   });
 
   it('should return public match details', async () => {
+    const _id = new ObjectId();
+
     await db.collection('matches').insertOne({
-      id: 'm1',
+      _id,
       teamA: 'Team A',
       teamB: 'Team B',
       events: [],
@@ -23,8 +27,8 @@ describe('GetPublicMatchDetailsQueryHandler', () => {
     const handler = new GetPublicMatchDetailsQueryHandler(
       new MongoMatchDetailsDAO(),
     );
-    const result = await handler.execute('m1');
+    const result = await handler.execute(_id.toHexString());
 
-    expect(result.matchId).toBe('m1');
+    expect(result.matchId).toBe(_id.toHexString());
   });
 });

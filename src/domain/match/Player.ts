@@ -56,4 +56,24 @@ export class Player {
         break;
     }
   }
+
+  public static restore(props: {
+    id: string;
+    name: string;
+    position: PlayerPosition;
+    inField: boolean;
+    yellowCards: number;
+    redCard: boolean;
+    timeInField: number;
+  }): Player {
+    return new Player(
+      props.id,
+      props.name,
+      props.position,
+      props.inField,
+      props.yellowCards,
+      props.redCard,
+      props.timeInField,
+    );
+  }
 }

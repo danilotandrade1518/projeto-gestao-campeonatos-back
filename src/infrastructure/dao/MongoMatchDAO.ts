@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import {
   MatchDAO,
   MatchSnapshotDTO,
@@ -6,7 +8,9 @@ import { db } from '../../shared/config';
 
 export class MongoMatchDAO implements MatchDAO {
   async getMatchSnapshot(matchId: string): Promise<MatchSnapshotDTO | null> {
-    const doc = await db.collection('matches').findOne({ id: matchId });
+    const doc = await db
+      .collection('matches')
+      .findOne({ _id: new ObjectId(matchId) });
     if (!doc) return null;
 
     const now = new Date();

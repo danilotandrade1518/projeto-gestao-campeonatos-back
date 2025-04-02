@@ -1,3 +1,5 @@
+import { Match } from '../../domain/match/Match';
+
 export interface BestGoalkeeper {
   playerId: string;
   playerName: string;
@@ -7,4 +9,5 @@ export interface BestGoalkeeper {
 
 export interface BestGoalkeeperDAO {
   getBestGoalkeeper(): Promise<BestGoalkeeper[]>;
+  update(match: Match): Promise<void>;
 }

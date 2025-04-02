@@ -25,6 +25,7 @@
     "mongodb": "^6.15.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.6.0",
     "@types/aws-lambda": "^8.10.148",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.14",

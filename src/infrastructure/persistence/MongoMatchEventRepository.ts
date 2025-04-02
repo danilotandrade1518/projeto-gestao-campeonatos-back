@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import { MatchEventRepository } from '../../application/protocols/MatchEventRepository';
 import { MatchEvent } from '../../domain/events/MatchEvent';
 import { db } from '../../shared/config';
@@ -6,15 +8,18 @@ export class MongoMatchEventRepository implements MatchEventRepository {
   private collection = db.collection('match_events');
 
   async exists(eventId: string): Promise<boolean> {
-    const existing = await this.collection.findOne({ id: eventId });
+    const existing = await this.collection.findOne({
+      _id: new ObjectId(eventId),
+    });
     return !!existing;
   }
 
   async saveMany(events: MatchEvent[]): Promise<void> {
     if (events.length === 0) return;
+
     await this.collection.insertMany(
       events.map((e) => ({
-        id: e.id,
+        _id: new ObjectId(e.id),
         matchId: e.matchId,
         type: e.type,
         teamId: e.teamId,
