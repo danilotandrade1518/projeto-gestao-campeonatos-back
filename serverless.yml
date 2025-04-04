@@ -32,6 +32,19 @@ provider:
             - s3:*
           Resource: '*'
 
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
+        - POST
+        - OPTIONS
+      allowCredentials: true
+
 build:
   esbuild: false
 
@@ -51,87 +64,76 @@ functions:
   startMatch:
     handler: src/presentation/lambdas/startMatchHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/start
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/start
+          method: POST
 
   startSecondHalf:
     handler: src/presentation/lambdas/startSecondHalfHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/start-second-half
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/start-second-half
+          method: POST
 
   closeMatch:
     handler: src/presentation/lambdas/closeMatchHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/close
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/close
+          method: POST
 
   registerEvent:
     handler: src/presentation/lambdas/registerMatchEventHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/events
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/events
+          method: POST
 
   voteCraque:
     handler: src/presentation/lambdas/voteCraqueDaPartidaHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/vote
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/vote
+          method: POST
 
   syncOfflineData:
     handler: src/presentation/lambdas/syncOfflineDataHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/sync-offline
-          method: post
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/sync-offline
+          method: POST
 
   getClassification:
     handler: src/presentation/lambdas/getClassificationHandler.handler
     events:
-      - http:
-          path: classification
-          method: get
-          cors: true
+      - httpApi:
+          path: /classification
+          method: GET
 
   getTopScorers:
     handler: src/presentation/lambdas/getTopScorersHandler.handler
     events:
-      - http:
-          path: top-scorers
-          method: get
-          cors: true
+      - httpApi:
+          path: /top-scorers
+          method: GET
 
   getBestGoalkeeper:
     handler: src/presentation/lambdas/getBestGoalkeeperHandler.handler
     events:
-      - http:
-          path: best-goalkeepers
-          method: get
-          cors: true
+      - httpApi:
+          path: /best-goalkeepers
+          method: GET
 
   getPublicMatchDetails:
     handler: src/presentation/lambdas/getPublicMatchDetailsHandler.handler
     events:
-      - http:
-          path: matches/{matchId}/details
-          method: get
-          cors: true
+      - httpApi:
+          path: /matches/{matchId}/details
+          method: GET
 
   getMatchesTable:
     handler: src/presentation/lambdas/getMatchesTableHandler.handler
     events:
-      - http:
-          path: matches-table
-          method: get
-          cors: true
+      - httpApi:
+          path: /matches-table
+          method: GET
