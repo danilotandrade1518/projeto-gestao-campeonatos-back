@@ -12,11 +12,7 @@ export class MongoMatchDetailsDAO implements MatchDetailsDAO {
       .collection('matches')
       .findOne({ _id: new ObjectId(matchId) });
 
-    console.log(
-      JSON.stringify(doc),
-      JSON.stringify({ _id: new ObjectId(matchId) }),
-      matchId,
-    );
+    console.log(doc, { _id: new ObjectId(matchId) }, matchId);
 
     if (!doc) return null;
 
