@@ -8,6 +8,8 @@ import { db } from '../../shared/config';
 
 export class MongoMatchDetailsDAO implements MatchDetailsDAO {
   async getMatchDetails(matchId: string): Promise<MatchDetails | null> {
+    console.log(db.databaseName);
+
     const doc = await db
       .collection('matches')
       .findOne({ _id: new ObjectId(matchId) });
