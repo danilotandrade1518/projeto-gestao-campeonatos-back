@@ -87,7 +87,7 @@ functions:
     handler: src/presentation/lambdas/syncOfflineDataHandler.handler
     events:
       - http:
-          path: matches/{matchId}/sync-offline
+          path: matches/{matchId}/sync
           method: post
 
   getClassification:
@@ -108,19 +108,19 @@ functions:
     handler: src/presentation/lambdas/getBestGoalkeeperHandler.handler
     events:
       - http:
-          path: best-goalkeeper
+          path: best-goalkeepers
           method: get
 
   getPublicMatchDetails:
     handler: src/presentation/lambdas/getPublicMatchDetailsHandler.handler
     events:
       - http:
-          path: matches/{matchId}/details
+          path: matches/{matchId}/public-details
           method: get
 
   getMatchesTable:
     handler: src/presentation/lambdas/getMatchesTableHandler.handler
     events:
       - http:
-          path: matches-table
+          path: matches/table
           method: get
