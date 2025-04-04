@@ -54,6 +54,7 @@ functions:
       - http:
           path: matches/{matchId}/start
           method: post
+          cors: true
 
   startSecondHalf:
     handler: src/presentation/lambdas/startSecondHalfHandler.handler
@@ -61,6 +62,7 @@ functions:
       - http:
           path: matches/{matchId}/start-second-half
           method: post
+          cors: true
 
   closeMatch:
     handler: src/presentation/lambdas/closeMatchHandler.handler
@@ -68,6 +70,7 @@ functions:
       - http:
           path: matches/{matchId}/close
           method: post
+          cors: true
 
   registerEvent:
     handler: src/presentation/lambdas/registerMatchEventHandler.handler
@@ -75,6 +78,7 @@ functions:
       - http:
           path: matches/{matchId}/events
           method: post
+          cors: true
 
   voteCraque:
     handler: src/presentation/lambdas/voteCraqueDaPartidaHandler.handler
@@ -82,13 +86,15 @@ functions:
       - http:
           path: matches/{matchId}/vote
           method: post
+          cors: true
 
   syncOfflineData:
     handler: src/presentation/lambdas/syncOfflineDataHandler.handler
     events:
       - http:
-          path: matches/{matchId}/sync
+          path: matches/{matchId}/sync-offline
           method: post
+          cors: true
 
   getClassification:
     handler: src/presentation/lambdas/getClassificationHandler.handler
@@ -96,6 +102,7 @@ functions:
       - http:
           path: classification
           method: get
+          cors: true
 
   getTopScorers:
     handler: src/presentation/lambdas/getTopScorersHandler.handler
@@ -103,6 +110,7 @@ functions:
       - http:
           path: top-scorers
           method: get
+          cors: true
 
   getBestGoalkeeper:
     handler: src/presentation/lambdas/getBestGoalkeeperHandler.handler
@@ -110,17 +118,20 @@ functions:
       - http:
           path: best-goalkeepers
           method: get
+          cors: true
 
   getPublicMatchDetails:
     handler: src/presentation/lambdas/getPublicMatchDetailsHandler.handler
     events:
       - http:
-          path: matches/{matchId}/public-details
+          path: matches/{matchId}/details
           method: get
+          cors: true
 
   getMatchesTable:
     handler: src/presentation/lambdas/getMatchesTableHandler.handler
     events:
       - http:
-          path: matches/table
+          path: matches-table
           method: get
+          cors: true
