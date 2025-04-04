@@ -43,7 +43,6 @@ provider:
         - GET
         - POST
         - OPTIONS
-      allowCredentials: true
 
 build:
   esbuild: false
