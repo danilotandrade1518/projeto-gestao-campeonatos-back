@@ -181,6 +181,21 @@ async function seed() {
     console.log(
       '✅ Partidas inseridas no formato esperado pelo MatchAggregate',
     );
+
+    const matchesTable = matches.map((match) => ({
+      matchId: match._id,
+      teamAId: match.teamA._id,
+      teamAName: match.teamA.name,
+      teamBId: match.teamB._id,
+      teamBName: match.teamB.name,
+      status: 'scheduled',
+      teamAScore: 0,
+      teamBScore: 0,
+    }));
+
+    await db.collection('matches_table').deleteMany({});
+    await db.collection('matches_table').insertMany(matchesTable);
+    console.log('✅ Tabela de jogos (matches_table) inserida');
   } catch (error) {
     console.error('❌ Erro ao rodar o seed', error);
   } finally {

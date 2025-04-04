@@ -1,4 +1,4 @@
-import { Match } from '../../domain/match/Match';
+import { Match, MatchStatus } from '../../domain/match/Match';
 import { BestGoalkeeperDAO } from '../protocols/BestGoalkeeperDAO';
 import { ClassificationDAO } from '../protocols/ClassificationDAO';
 import { TopScorerDAO } from '../protocols/TopScorerDAO';
@@ -12,7 +12,7 @@ export class DefaultUpdateStatisticsService implements UpdateStatisticsService {
   ) {}
 
   async update(match: Match): Promise<void> {
-    if (match.status !== 'FINISHED') return;
+    if (match.status !== MatchStatus.FINISHED) return;
 
     await this.classificationDAO.update(match);
     await this.topScorerDAO.update(match);
