@@ -1,8 +1,30 @@
 export interface MatchDetails {
-  matchId: string;
-  teamA: string;
-  teamB: string;
-  events: Array<any>; // depois pode ser tipado melhor
+  teamA: {
+    id: string;
+    name: string;
+    players: Array<{
+      id: string;
+      name: string;
+      position: 'GOALKEEPER' | 'FIELD';
+      inField: boolean;
+      yellowCards: number;
+      redCard: boolean;
+      timeInField: number;
+    }>;
+  };
+  teamB: {
+    id: string;
+    name: string;
+    players: Array<{
+      id: string;
+      name: string;
+      position: 'GOALKEEPER' | 'FIELD';
+      inField: boolean;
+      yellowCards: number;
+      redCard: boolean;
+      timeInField: number;
+    }>;
+  };
 }
 
 export interface MatchDetailsDAO {
