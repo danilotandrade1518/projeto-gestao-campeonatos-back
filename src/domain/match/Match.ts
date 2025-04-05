@@ -132,6 +132,12 @@ export class Match {
     return { points, goals };
   }
 
+  public getGoalsCount(teamId: string): number {
+    return this.events.filter(
+      (event) => event.type === MatchEventType.GOAL && event.teamId === teamId,
+    ).length;
+  }
+
   public addEvent(event: MatchEvent): void {
     if (this._status !== 'IN_PROGRESS')
       throw new Error('Match is not in progress');

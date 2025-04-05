@@ -182,8 +182,9 @@ async function seed() {
       '✅ Partidas inseridas no formato esperado pelo MatchAggregate',
     );
 
-    const matchesTable = matches.map((match) => ({
+    const matchesTable = matches.map((match, index) => ({
       matchId: match._id,
+      round: Math.floor(index / 2) + 1,
       teamAId: match.teamA._id,
       teamAName: match.teamA.name,
       teamBId: match.teamB._id,
@@ -191,6 +192,7 @@ async function seed() {
       status: 'scheduled',
       teamAScore: 0,
       teamBScore: 0,
+      date: new Date(),
     }));
 
     await db.collection('matches_table').deleteMany({});

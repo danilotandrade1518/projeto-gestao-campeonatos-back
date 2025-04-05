@@ -1,11 +1,15 @@
 import { CloseMatchUseCase } from '../../application/usecases/CloseMatchUseCase';
+import { MongoMatchesTableDAO } from '../../infrastructure/dao/MongoMatchesTableDAO';
 import { MongoMatchRepository } from '../../infrastructure/persistence/MongoMatchRepository';
 
 export const handler = async (event: any) => {
   try {
     const matchId = event.pathParameters.matchId;
 
-    const useCase = new CloseMatchUseCase(new MongoMatchRepository());
+    const useCase = new CloseMatchUseCase(
+      new MongoMatchRepository(),
+      new MongoMatchesTableDAO(),
+    );
     await useCase.execute(matchId);
 
     return {

@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 
 import { MatchEvent, MatchEventType } from '../../domain/events/MatchEvent';
 import { MatchStatus } from '../../domain/match/Match';
+import { MatchesTableDAO } from '../protocols/MatchesTableDAO';
 import { MatchRepository } from '../protocols/MatchRepository';
 
 interface Input {
@@ -12,7 +13,10 @@ interface Input {
 }
 
 export class RegisterMatchEventUseCase {
-  constructor(private readonly matchRepository: MatchRepository) {}
+  constructor(
+    private readonly matchRepository: MatchRepository,
+    private readonly matchesTableDAO: MatchesTableDAO,
+  ) {}
 
   async execute(input: Input): Promise<void> {
     const match = await this.matchRepository.getById(input.matchId);
@@ -34,5 +38,11 @@ export class RegisterMatchEventUseCase {
     match.addEvent(event);
 
     await this.matchRepository.save(match);
+
+    if (event.type === MatchEventType.GOAL) {
+      const teamAScore = match.getGoalsCount(match.teamA.id);
+      const teamBScore = match.getGoalsCount(match.teamB.id);
+      await this.matchesTableDAO.updateScore(match.id, teamAScore, teamBScore);
+    }
   }
 }

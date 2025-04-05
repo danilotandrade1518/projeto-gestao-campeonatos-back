@@ -1,8 +1,12 @@
 import { MatchStatus } from '../../domain/match/Match';
+import { MatchesTableDAO } from '../protocols/MatchesTableDAO';
 import { MatchRepository } from '../protocols/MatchRepository';
 
 export class CloseMatchUseCase {
-  constructor(private readonly matchRepository: MatchRepository) {}
+  constructor(
+    private readonly matchRepository: MatchRepository,
+    private readonly matchesTableDAO: MatchesTableDAO,
+  ) {}
 
   async execute(matchId: string): Promise<void> {
     const match = await this.matchRepository.getById(matchId);
@@ -15,5 +19,6 @@ export class CloseMatchUseCase {
     match.close();
 
     await this.matchRepository.save(match);
+    await this.matchesTableDAO.finishMatch(match.id);
   }
 }
