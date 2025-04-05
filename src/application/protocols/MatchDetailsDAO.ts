@@ -1,9 +1,9 @@
 export interface MatchDetails {
   teamA: {
-    id: string;
+    _id: string;
     name: string;
     players: Array<{
-      id: string;
+      _id: string;
       name: string;
       position: 'GOALKEEPER' | 'FIELD';
       inField: boolean;
@@ -13,10 +13,10 @@ export interface MatchDetails {
     }>;
   };
   teamB: {
-    id: string;
+    _id: string;
     name: string;
     players: Array<{
-      id: string;
+      _id: string;
       name: string;
       position: 'GOALKEEPER' | 'FIELD';
       inField: boolean;

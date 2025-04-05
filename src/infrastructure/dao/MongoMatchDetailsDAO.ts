@@ -16,12 +16,12 @@ export class MongoMatchDetailsDAO implements MatchDetailsDAO {
 
     return {
       teamA: {
-        id: doc.teamA.id,
+        _id: doc.teamA._id,
         name: doc.teamA.name,
         players: doc.teamA.players,
       },
       teamB: {
-        id: doc.teamB.id,
+        _id: doc.teamB._id,
         name: doc.teamB.name,
         players: doc.teamB.players,
       },
