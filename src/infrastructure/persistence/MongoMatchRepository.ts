@@ -56,7 +56,11 @@ export class MongoMatchRepository implements MatchRepository {
       currentPeriodStartTime: doc.currentPeriodStartTime
         ? new Date(doc.currentPeriodStartTime)
         : null,
-      events: doc.events || [],
+      events:
+        doc.events.map((e: any) => ({
+          id: e._id.toHexString(),
+          ...e,
+        })) || [],
     });
   }
 
@@ -86,7 +90,11 @@ export class MongoMatchRepository implements MatchRepository {
           currentPeriodStartTime: match.currentPeriodStartTime
             ? new Date(match.currentPeriodStartTime)
             : null,
-          events: match.events || [],
+          events:
+            match.events.map((e) => ({
+              _id: new ObjectId(e.id),
+              ...e,
+            })) || [],
         },
       },
       { upsert: true },
