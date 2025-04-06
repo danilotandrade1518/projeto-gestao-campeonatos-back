@@ -28,13 +28,19 @@ export class MongoMatchDetailsDAO implements MatchDetailsDAO {
       teamA: {
         id: doc.teamA._id,
         name: doc.teamA.name,
-        players: doc.teamA.players,
+        players: doc.teamA.players.map((player: any) => ({
+          id: player._id.toHexString(),
+          ...player,
+        })),
         goals: teamAGoals,
       },
       teamB: {
         id: doc.teamB._id,
         name: doc.teamB.name,
-        players: doc.teamB.players,
+        players: doc.teamB.players.map((player: any) => ({
+          id: player._id.toHexString(),
+          ...player,
+        })),
         goals: teamBGoals,
       },
       events: events.map((e: any) => ({
