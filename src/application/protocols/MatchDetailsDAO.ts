@@ -1,10 +1,10 @@
 export interface MatchDetails {
   id: string;
   teamA: {
-    _id: string;
+    id: string;
     name: string;
     players: Array<{
-      _id: string;
+      id: string;
       name: string;
       position: 'GOALKEEPER' | 'FIELD';
       inField: boolean;
@@ -15,10 +15,10 @@ export interface MatchDetails {
     goals: number;
   };
   teamB: {
-    _id: string;
+    id: string;
     name: string;
     players: Array<{
-      _id: string;
+      id: string;
       name: string;
       position: 'GOALKEEPER' | 'FIELD';
       inField: boolean;
