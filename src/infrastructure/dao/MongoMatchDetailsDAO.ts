@@ -14,17 +14,37 @@ export class MongoMatchDetailsDAO implements MatchDetailsDAO {
 
     if (!doc) return null;
 
+    const events = doc.events || [];
+
+    const teamAGoals = events.filter(
+      (e: any) => e.type === 'GOAL' && e.teamId === doc.teamA.id,
+    ).length;
+    const teamBGoals = events.filter(
+      (e: any) => e.type === 'GOAL' && e.teamId === doc.teamB.id,
+    ).length;
+
     return {
+      id: doc._id.toString(),
       teamA: {
         _id: doc.teamA._id,
         name: doc.teamA.name,
         players: doc.teamA.players,
+        goals: teamAGoals,
       },
       teamB: {
         _id: doc.teamB._id,
         name: doc.teamB.name,
         players: doc.teamB.players,
+        goals: teamBGoals,
       },
+      events: events.map((e: any) => ({
+        id: e.id,
+        type: e.type,
+        teamId: e.teamId,
+        minute: e.minute,
+        timestamp: e.timestamp,
+        data: e.data,
+      })),
     };
   }
 }

@@ -4,6 +4,7 @@ import { Team } from './Team';
 export enum MatchPeriod {
   FIRST_HALF = 'FIRST_HALF',
   SECOND_HALF = 'SECOND_HALF',
+  NOT_STARTED = 'NOT_STARTED',
 }
 
 export enum MatchStatus {

@@ -1,4 +1,5 @@
 export interface MatchDetails {
+  id: string;
   teamA: {
     _id: string;
     name: string;
@@ -11,6 +12,7 @@ export interface MatchDetails {
       redCard: boolean;
       timeInField: number;
     }>;
+    goals: number;
   };
   teamB: {
     _id: string;
@@ -24,7 +26,16 @@ export interface MatchDetails {
       redCard: boolean;
       timeInField: number;
     }>;
+    goals: number;
   };
+  events: Array<{
+    id: string;
+    type: 'GOAL' | 'CARD' | 'SUBSTITUTION';
+    teamId: string;
+    minute: number;
+    timestamp: string;
+    data: any;
+  }>;
 }
 
 export interface MatchDetailsDAO {

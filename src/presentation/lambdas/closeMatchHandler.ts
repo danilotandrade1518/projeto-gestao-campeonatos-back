@@ -1,5 +1,9 @@
+import { DefaultUpdateStatisticsService } from '../../application/services/DefaultUpdateStatisticsService';
 import { CloseMatchUseCase } from '../../application/usecases/CloseMatchUseCase';
+import { MongoBestGoalkeeperDAO } from '../../infrastructure/dao/MongoBestGoalkeeperDAO';
+import { MongoClassificationDAO } from '../../infrastructure/dao/MongoClassificationDAO';
 import { MongoMatchesTableDAO } from '../../infrastructure/dao/MongoMatchesTableDAO';
+import { MongoTopScorerDAO } from '../../infrastructure/dao/MongoTopScorerDAO';
 import { MongoMatchRepository } from '../../infrastructure/persistence/MongoMatchRepository';
 
 export const handler = async (event: any) => {
@@ -9,6 +13,11 @@ export const handler = async (event: any) => {
     const useCase = new CloseMatchUseCase(
       new MongoMatchRepository(),
       new MongoMatchesTableDAO(),
+      new DefaultUpdateStatisticsService(
+        new MongoClassificationDAO(),
+        new MongoTopScorerDAO(),
+        new MongoBestGoalkeeperDAO(),
+      ),
     );
     await useCase.execute(matchId);
 

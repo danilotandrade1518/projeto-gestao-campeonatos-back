@@ -2,6 +2,9 @@ import 'dotenv/config';
 
 import { MongoClient, ObjectId } from 'mongodb';
 
+import { MatchPeriod, MatchStatus } from './../src/domain/match/Match';
+import { PlayerPosition } from './../src/domain/match/Player';
+
 const MONGO_URI = process.env.MONGO_URI || '';
 
 if (!MONGO_URI) {
@@ -19,7 +22,8 @@ async function seed() {
       return names.map((name, index) => ({
         _id: new ObjectId(),
         name,
-        position: index === 0 ? 'GOALKEEPER' : 'FIELD',
+        position:
+          index === 0 ? PlayerPosition.GOALKEEPER : PlayerPosition.FIELD,
         inField: false,
         yellowCards: 0,
         redCard: false,
@@ -57,7 +61,7 @@ async function seed() {
       _id: new ObjectId(),
       name: 'Unidos do Golo',
       players: makePlayers([
-        '?',
+        'Rossini',
         'Pitucha',
         'Luizin',
         'Lopes',
@@ -98,80 +102,80 @@ async function seed() {
         _id: new ObjectId(),
         teamA: meiaBocaJuniors,
         teamB: arsenalcool,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: unidosDoGolo,
         teamB: osWolfs,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: meiaBocaJuniors,
         teamB: unidosDoGolo,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: arsenalcool,
         teamB: tigrinhoFc,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: meiaBocaJuniors,
         teamB: osWolfs,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: unidosDoGolo,
         teamB: tigrinhoFc,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: meiaBocaJuniors,
         teamB: tigrinhoFc,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: arsenalcool,
         teamB: osWolfs,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: arsenalcool,
         teamB: unidosDoGolo,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
       {
         _id: new ObjectId(),
         teamA: osWolfs,
         teamB: tigrinhoFc,
-        status: 'scheduled',
-        period: 'NOT_STARTED',
+        status: MatchStatus.SCHEDULED,
+        period: MatchPeriod.NOT_STARTED,
         events: [],
       },
     ];
@@ -189,7 +193,7 @@ async function seed() {
       teamAName: match.teamA.name,
       teamBId: match.teamB._id,
       teamBName: match.teamB.name,
-      status: 'scheduled',
+      status: MatchStatus.SCHEDULED,
       teamAScore: 0,
       teamBScore: 0,
       date: new Date(),

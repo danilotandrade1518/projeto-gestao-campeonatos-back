@@ -15,11 +15,12 @@ describe('GetPublicMatchDetailsQueryHandler', () => {
   });
 
   it('should return public match details', async () => {
+    const teamA = 'Team A';
     const _id = new ObjectId();
 
     await db.collection('matches').insertOne({
       _id,
-      teamA: 'Team A',
+      teamA,
       teamB: 'Team B',
       events: [],
     });
@@ -29,6 +30,6 @@ describe('GetPublicMatchDetailsQueryHandler', () => {
     );
     const result = await handler.execute(_id.toHexString());
 
-    expect(result.matchId).toBe(_id.toHexString());
+    expect(result.teamA.name).toBe(teamA);
   });
 });
