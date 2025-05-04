@@ -31,6 +31,7 @@ provider:
             - logs:*
             - iam:PassRole
             - s3:*
+            - sqs:SendMessage
           Resource: '*'
 
   httpApi:
