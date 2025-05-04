@@ -8,11 +8,19 @@ export class SqsQueueAdapter implements QueueAdapter {
   });
 
   async sendMessage(message: string, queueUrl: string): Promise<void> {
-    await this.client.send(
-      new SendMessageCommand({
-        QueueUrl: queueUrl,
-        MessageBody: message,
-      }),
-    );
+    try {
+      await this.client.send(
+        new SendMessageCommand({
+          QueueUrl: queueUrl,
+          MessageBody: message,
+        }),
+      );
+    } catch (error) {
+      console.log('Sending message to SQS:', message, queueUrl);
+
+      throw new Error(
+        `Error sending message to SQS: ${error}. Message: ${message} ||| Queue URL: ${queueUrl}`,
+      );
+    }
   }
 }

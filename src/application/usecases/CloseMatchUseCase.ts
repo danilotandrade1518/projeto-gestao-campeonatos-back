@@ -22,6 +22,6 @@ export class CloseMatchUseCase {
 
     await this.matchRepository.save(match);
     await this.matchesTableDAO.finishMatch(match.id);
-    await this.queuePublisher.publish(match);
+    await this.queuePublisher.publish({ matchId: match.id });
   }
 }

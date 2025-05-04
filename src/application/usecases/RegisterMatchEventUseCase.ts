@@ -46,7 +46,7 @@ export class RegisterMatchEventUseCase {
       const teamBScore = match.getGoalsCount(match.teamB.id);
       await this.matchesTableDAO.updateScore(match.id, teamAScore, teamBScore);
 
-      await this.queuePublisher.publish(match);
+      await this.queuePublisher.publish({ matchId: match.id });
     }
   }
 }

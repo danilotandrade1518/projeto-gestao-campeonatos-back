@@ -51,7 +51,7 @@ export class SyncOfflineDataUseCase {
     if (newEvents.length > 0) {
       await this.matchEventRepository.saveMany(newEvents);
       await this.matchRepository.save(match);
-      await this.queuePublisher.publish(match);
+      await this.queuePublisher.publish({ matchId: match.id });
     }
   }
 }
