@@ -31,7 +31,7 @@ provider:
             - logs:*
             - iam:PassRole
             - s3:*
-            - sqs:SendMessage
+            - sqs:*
           Resource: '*'
 
   httpApi:
@@ -138,3 +138,10 @@ functions:
       - httpApi:
           path: /matches-table
           method: GET
+
+  updateStatisticsHandler:
+    handler: src/presentation/lambdas/updateStatisticsHandler.handler
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-east-1:682941446402:update-statistics-queue
+          batchSize: 1
