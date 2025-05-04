@@ -1,18 +1,14 @@
-import { VoteCraqueDaPartidaUseCase } from '../../application/usecases/VoteCraqueDaPartidaUseCase';
-import { MongoMatchRepository } from '../../infrastructure/persistence/MongoMatchRepository';
-import { MongoVoteRepository } from '../../infrastructure/persistence/MongoVoteRepository';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async (event: any) => {
   try {
     const body = JSON.parse(event.body);
 
+    const useCase = getDependencies().usecases.VoteCraqueDaPartidaUseCase;
+
     const matchId = event.pathParameters.matchId;
     const voterId = body.voterId;
     const votedPlayerId = body.votedPlayerId;
-
-    const matchRepo = new MongoMatchRepository();
-    const voteRepo = new MongoVoteRepository();
-    const useCase = new VoteCraqueDaPartidaUseCase(matchRepo, voteRepo);
 
     await useCase.execute({
       matchId,

@@ -1,15 +1,10 @@
-import { RegisterMatchEventUseCase } from '../../application/usecases/RegisterMatchEventUseCase';
-import { MongoMatchesTableDAO } from '../../infrastructure/dao/MongoMatchesTableDAO';
-import { MongoMatchRepository } from '../../infrastructure/persistence/MongoMatchRepository';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async (event: any) => {
   try {
     const body = JSON.parse(event.body);
 
-    const useCase = new RegisterMatchEventUseCase(
-      new MongoMatchRepository(),
-      new MongoMatchesTableDAO(),
-    );
+    const useCase = getDependencies().usecases.RegisterMatchEventUseCase;
 
     await useCase.execute({
       matchId: event.pathParameters.matchId,

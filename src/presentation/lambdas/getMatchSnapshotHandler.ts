@@ -1,12 +1,11 @@
-import { GetMatchSnapshotQueryHandler } from '../../application/queries/GetMatchSnapshotQueryHandler';
-import { MongoMatchDAO } from '../../infrastructure/dao/MongoMatchDAO';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async (event: any) => {
   try {
-    const matchId = event.pathParameters.matchId;
-    const dao = new MongoMatchDAO();
-    const queryHandler = new GetMatchSnapshotQueryHandler(dao);
+    const queryHandler =
+      getDependencies().queryHandlers.GetMatchSnapshotQueryHandler;
 
+    const matchId = event.pathParameters.matchId;
     const result = await queryHandler.execute(matchId);
 
     return {

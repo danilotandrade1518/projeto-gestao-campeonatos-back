@@ -1,11 +1,10 @@
-import { StartMatchUseCase } from '../../application/usecases/StartMatchUseCase';
-import { MongoMatchRepository } from '../../infrastructure/persistence/MongoMatchRepository';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async (event: any) => {
   try {
     const matchId = event.pathParameters.matchId;
 
-    const useCase = new StartMatchUseCase(new MongoMatchRepository());
+    const useCase = getDependencies().usecases.StartMatchUseCase;
     await useCase.execute(matchId);
 
     return {

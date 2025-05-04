@@ -1,7 +1,7 @@
 import { MatchEvent, MatchEventType } from '../../domain/events/MatchEvent';
 import { MatchEventRepository } from '../protocols/MatchEventRepository';
 import { MatchRepository } from '../protocols/MatchRepository';
-import { UpdateStatisticsService } from '../protocols/UpdateStatisticsService';
+import { MessageQueuePublisher } from '../protocols/MessageQueuePublisher';
 
 interface SyncOfflineDataInput {
   matchId: string;
@@ -20,7 +20,7 @@ export class SyncOfflineDataUseCase {
   constructor(
     private readonly matchRepository: MatchRepository,
     private readonly matchEventRepository: MatchEventRepository,
-    private readonly updateStatisticsService: UpdateStatisticsService,
+    private readonly queuePublisher: MessageQueuePublisher,
   ) {}
 
   async execute(input: SyncOfflineDataInput): Promise<void> {
@@ -51,7 +51,7 @@ export class SyncOfflineDataUseCase {
     if (newEvents.length > 0) {
       await this.matchEventRepository.saveMany(newEvents);
       await this.matchRepository.save(match);
-      await this.updateStatisticsService.update(match);
+      await this.queuePublisher.publish(match);
     }
   }
 }

@@ -1,8 +1,7 @@
-import { GetBestGoalkeeperQueryHandler } from '../../application/queries/GetBestGoalkeeperQueryHandler';
-import { MongoBestGoalkeeperDAO } from '../../infrastructure/dao/MongoBestGoalkeeperDAO';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async () => {
-  const query = new GetBestGoalkeeperQueryHandler(new MongoBestGoalkeeperDAO());
+  const query = getDependencies().queryHandlers.GetBestGoalkeeperQueryHandler;
   const result = await query.execute();
 
   return {

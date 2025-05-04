@@ -2,14 +2,16 @@ import { getDependencies } from './core/getDependencies';
 
 export const handler = async (event: any) => {
   try {
-    const matchId = event.pathParameters.matchId;
+    const useCase = getDependencies().usecases.UpdateStatisticsUseCase;
 
-    const useCase = getDependencies().usecases.StartSecondHalfUseCase;
-    await useCase.execute(matchId);
+    for (const record of event.Records) {
+      const { matchId } = JSON.parse(record.body);
+      await useCase.execute(matchId);
+    }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Second half started successfully' }),
+      body: JSON.stringify({ message: 'Statistics updated successfully' }),
     };
   } catch (error: any) {
     return {

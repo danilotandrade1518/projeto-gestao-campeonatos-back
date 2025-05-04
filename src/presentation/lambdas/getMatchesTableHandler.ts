@@ -1,8 +1,7 @@
-import { GetMatchesTableQueryHandler } from '../../application/queries/GetMatchesTableQueryHandler';
-import { MongoMatchesTableDAO } from '../../infrastructure/dao/MongoMatchesTableDAO';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async () => {
-  const query = new GetMatchesTableQueryHandler(new MongoMatchesTableDAO());
+  const query = getDependencies().queryHandlers.GetMatchesTableQueryHandler;
   const result = await query.execute();
 
   return {

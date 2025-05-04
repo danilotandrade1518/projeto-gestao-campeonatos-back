@@ -4,6 +4,7 @@ import { MatchEvent, MatchEventType } from '../../domain/events/MatchEvent';
 import { MatchStatus } from '../../domain/match/Match';
 import { MatchesTableDAO } from '../protocols/MatchesTableDAO';
 import { MatchRepository } from '../protocols/MatchRepository';
+import { MessageQueuePublisher } from '../protocols/MessageQueuePublisher';
 
 interface Input {
   matchId: string;
@@ -16,6 +17,7 @@ export class RegisterMatchEventUseCase {
   constructor(
     private readonly matchRepository: MatchRepository,
     private readonly matchesTableDAO: MatchesTableDAO,
+    private readonly queuePublisher: MessageQueuePublisher,
   ) {}
 
   async execute(input: Input): Promise<void> {
@@ -43,6 +45,8 @@ export class RegisterMatchEventUseCase {
       const teamAScore = match.getGoalsCount(match.teamA.id);
       const teamBScore = match.getGoalsCount(match.teamB.id);
       await this.matchesTableDAO.updateScore(match.id, teamAScore, teamBScore);
+
+      await this.queuePublisher.publish(match);
     }
   }
 }

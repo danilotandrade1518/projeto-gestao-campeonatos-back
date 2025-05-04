@@ -1,8 +1,7 @@
-import { GetClassificationQueryHandler } from '../../application/queries/GetClassificationQueryHandler';
-import { MongoClassificationDAO } from '../../infrastructure/dao/MongoClassificationDAO';
+import { getDependencies } from './core/getDependencies';
 
 export const handler = async () => {
-  const query = new GetClassificationQueryHandler(new MongoClassificationDAO());
+  const query = getDependencies().queryHandlers.GetClassificationQueryHandler;
   const result = await query.execute();
 
   return {

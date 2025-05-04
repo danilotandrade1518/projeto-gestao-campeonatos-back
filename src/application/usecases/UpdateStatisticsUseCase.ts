@@ -1,18 +1,20 @@
-import { Match, MatchStatus } from '../../domain/match/Match';
 import { BestGoalkeeperDAO } from '../protocols/BestGoalkeeperDAO';
 import { ClassificationDAO } from '../protocols/ClassificationDAO';
+import { MatchRepository } from '../protocols/MatchRepository';
 import { TopScorerDAO } from '../protocols/TopScorerDAO';
-import { UpdateStatisticsService } from '../protocols/UpdateStatisticsService';
 
-export class DefaultUpdateStatisticsService implements UpdateStatisticsService {
+export class UpdateStatisticsUseCase {
   constructor(
+    private readonly matchRepository: MatchRepository,
     private readonly classificationDAO: ClassificationDAO,
     private readonly topScorerDAO: TopScorerDAO,
     private readonly bestGoalkeeperDAO: BestGoalkeeperDAO,
   ) {}
 
-  async update(match: Match): Promise<void> {
-    if (match.status !== MatchStatus.FINISHED) return;
+  async execute(matchId: string): Promise<void> {
+    const match = await this.matchRepository.getById(matchId);
+
+    if (!match) throw new Error('Match not found');
 
     await this.classificationDAO.update(match);
     await this.topScorerDAO.update(match);
