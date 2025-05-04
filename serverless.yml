@@ -19,6 +19,7 @@ provider:
   environment:
     NODE_ENV: ${self:provider.stage}
     MONGO_URI: ${env:MONGO_URI}
+    UPDATE_STATS_QUEUE_URL: ${env:UPDATE_STATS_QUEUE_URL}
 
   iam:
     role:
