@@ -29,13 +29,18 @@ export class MongoTopScorerDAO implements TopScorerDAO {
   async update(match: Match): Promise<void> {
     const goals = match.events.filter((e) => e.type === MatchEventType.GOAL);
 
-    const updates = goals.map((goal) =>
-      this.collection.updateOne(
-        { playerId: goal.data.playerId },
-        { $inc: { goals: 1 } },
+    const getGoalsCountByPlayerId = (playerId: string) =>
+      goals.filter((goal) => goal.data.playerId === playerId).length;
+
+    const updates = goals.map((goal) => {
+      const playerId = goal.data.playerId!;
+
+      return this.collection.updateOne(
+        { playerId: playerId },
+        { $set: { goals: getGoalsCountByPlayerId(playerId) } },
         { upsert: true },
-      ),
-    );
+      );
+    });
 
     await Promise.all(updates);
   }

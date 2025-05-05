@@ -51,7 +51,7 @@ export class MongoBestGoalkeeperDAO implements BestGoalkeeperDAO {
       updates.push(
         this.collection.updateOne(
           { playerId: goalkeeperA.id },
-          { $inc: { goalsConceded: teamAGoals } },
+          { $set: { goalsConceded: teamAGoals } },
           { upsert: true },
         ),
       );
@@ -61,7 +61,7 @@ export class MongoBestGoalkeeperDAO implements BestGoalkeeperDAO {
       updates.push(
         this.collection.updateOne(
           { playerId: goalkeeperB.id },
-          { $inc: { goalsConceded: teamBGoals } },
+          { $set: { goalsConceded: teamBGoals } },
           { upsert: true },
         ),
       );
