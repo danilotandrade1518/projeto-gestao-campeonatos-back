@@ -113,8 +113,6 @@ export class Match {
   }
 
   public calculateScore(teamId: string): { points: number; goals: number } {
-    if (this.status !== MatchStatus.FINISHED) return { points: 0, goals: 0 };
-
     const teamAGoals = this.events.filter(
       (e) => e.type === MatchEventType.GOAL && e.teamId === this.teamA.id,
     ).length;
