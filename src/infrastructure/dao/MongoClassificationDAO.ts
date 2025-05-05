@@ -39,7 +39,7 @@ export class MongoClassificationDAO implements ClassificationDAO {
       this.collection.updateOne(
         { teamId: match.teamA.id },
         {
-          $inc: {
+          $set: {
             points: teamAScore.points,
             goalsScored: teamAScore.goals,
             goalsConceded: teamBScore.goals,
@@ -50,7 +50,7 @@ export class MongoClassificationDAO implements ClassificationDAO {
       this.collection.updateOne(
         { teamId: match.teamB.id },
         {
-          $inc: {
+          $set: {
             points: teamBScore.points,
             goalsScored: teamBScore.goals,
             goalsConceded: teamAScore.goals,
