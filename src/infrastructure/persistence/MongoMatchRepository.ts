@@ -31,6 +31,9 @@ export class MongoMatchRepository implements MatchRepository {
             yellowCards: player.yellowCards,
             redCard: player.redCard,
             timeInField: player.timeInField,
+            entryTimeMinutes: player.entryTimeMinutes,
+            lastPunishmentAt: player.lastPunishmentAt,
+            lastPunishmentType: player.lastPunishmentType,
           }),
         ),
       }),
@@ -46,6 +49,9 @@ export class MongoMatchRepository implements MatchRepository {
             yellowCards: player.yellowCards,
             redCard: player.redCard,
             timeInField: player.timeInField,
+            entryTimeMinutes: player.entryTimeMinutes,
+            lastPunishmentAt: player.lastPunishmentAt,
+            lastPunishmentType: player.lastPunishmentType,
           }),
         ),
       }),
@@ -110,6 +116,9 @@ export class MongoMatchRepository implements MatchRepository {
       yellowCards: player.yellowCards,
       redCard: player.redCard,
       timeInField: player.timeInField,
+      entryTimeMinutes: player.entryTimeMinutes,
+      lastPunishmentAt: player.lastPunishmentAt,
+      lastPunishmentType: player.lastPunishmentType,
     };
   }
 }

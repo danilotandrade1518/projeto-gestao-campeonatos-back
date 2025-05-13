@@ -1,8 +1,12 @@
 export enum MatchEventType {
   GOAL = 'GOAL',
-  CARD = 'CARD',
   SUBSTITUTION = 'SUBSTITUTION',
   PERIOD_CHANGE = 'PERIOD_CHANGE',
+  PLAYER_IN = 'PLAYER_IN',
+  PLAYER_OUT = 'PLAYER_OUT',
+  FOUL = 'FOUL',
+  YELLOW_CARD = 'YELLOW_CARD',
+  RED_CARD = 'RED_CARD',
 }
 
 export enum MatchEventCard {
@@ -28,4 +32,13 @@ export class MatchEvent {
     public minute: number,
     public readonly data: MatchEventData,
   ) {}
+
+  public static isPlayerEvent(type: MatchEventType): boolean {
+    return [
+      MatchEventType.PLAYER_IN,
+      MatchEventType.PLAYER_OUT,
+      MatchEventType.YELLOW_CARD,
+      MatchEventType.RED_CARD,
+    ].includes(type);
+  }
 }

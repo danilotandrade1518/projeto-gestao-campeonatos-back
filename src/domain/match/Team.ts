@@ -17,15 +17,48 @@ export class Team {
     return this._players;
   }
 
-  public getPlayersInField(): Player[] {
-    return this.players.filter((p) => p.inField);
+  public getPlayerById(playerId: string): Player | undefined {
+    return this._players.find((p) => p.id === playerId);
+  }
+
+  public getPlayers(): Player[] {
+    return [...this._players];
+  }
+
+  public getAllPlayersInField(): Player[] {
+    return this._players.filter((p) => p.inField);
   }
 
   public getTotalCards(): number {
-    return this.players.reduce(
+    return this._players.reduce(
       (acc, p) => acc + p.yellowCards + (p.redCard ? 2 : 0),
       0,
     );
+  }
+
+  public getPlayerTimes(currentMinute: number): Record<string, number> {
+    return Object.fromEntries(
+      this._players.map((p) => [p.id, p.getTotalTimeInField(currentMinute)]),
+    );
+  }
+
+  public getActivePunishments(
+    currentMinute: number,
+  ): Record<string, { type: 'YELLOW' | 'RED'; minutesLeft: number }> {
+    const result: Record<
+      string,
+      { type: 'YELLOW' | 'RED'; minutesLeft: number }
+    > = {};
+    for (const p of this._players) {
+      const minutesLeft = p.getPunishmentTimeLeft(currentMinute);
+      if (minutesLeft !== null) {
+        result[p.id] = {
+          type: p.redCard ? 'RED' : 'YELLOW',
+          minutesLeft,
+        };
+      }
+    }
+    return result;
   }
 
   public static restore(props: {
@@ -33,7 +66,6 @@ export class Team {
     name: string;
     players: Player[];
   }): Team {
-    const team = new Team(props.id, props.name, props.players);
-    return team;
+    return new Team(props.id, props.name, props.players);
   }
 }

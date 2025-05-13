@@ -28,6 +28,9 @@ async function seed() {
         yellowCards: 0,
         redCard: false,
         timeInField: 0,
+        entryTimeMinutes: null,
+        lastPunishmentAt: null,
+        lastPunishmentType: null,
       }));
     };
 

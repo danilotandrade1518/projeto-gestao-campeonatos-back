@@ -1,4 +1,8 @@
-import { MatchEvent, MatchEventType } from '../events/MatchEvent';
+import {
+  MatchEvent,
+  MatchEventCard,
+  MatchEventType,
+} from '../events/MatchEvent';
 import { Team } from './Team';
 
 export enum MatchPeriod {
@@ -77,12 +81,11 @@ export class Match {
     if (this._status !== MatchStatus.IN_PROGRESS)
       throw new Error('Match is not in progress');
 
-    // Atualiza o tempo acumulado do segundo tempo antes de encerrar
     if (this._period === 'SECOND_HALF') {
       this._secondHalfElapsed = this.getCurrentElapsed();
     } else if (this._period === 'FIRST_HALF') {
       this._firstHalfElapsed = this.getCurrentElapsed();
-      this._secondHalfElapsed = 0; // nunca chegou a ter segundo tempo
+      this._secondHalfElapsed = 0;
     }
 
     switch (this._period) {
@@ -138,13 +141,83 @@ export class Match {
   }
 
   public addEvent(event: MatchEvent): void {
-    if (this._status !== 'IN_PROGRESS')
+    if (this._status !== MatchStatus.IN_PROGRESS)
       throw new Error('Match is not in progress');
+
     this._events.push(event);
+
+    if (!MatchEvent.isPlayerEvent(event.type)) return;
+
+    const playerId = event.data?.playerId;
+    if (!playerId) return;
+
+    const player =
+      this._teamA.getPlayerById(playerId) ??
+      this._teamB.getPlayerById(playerId);
+
+    if (!player) return;
+
+    const minute = event.minute;
+
+    switch (event.type) {
+      case MatchEventType.PLAYER_IN:
+        player.enterField(minute);
+        break;
+      case MatchEventType.PLAYER_OUT:
+        player.leaveField(minute);
+        break;
+      case MatchEventType.YELLOW_CARD:
+        player.giveCard(MatchEventCard.YELLOW, minute);
+        break;
+      case MatchEventType.RED_CARD:
+        player.giveCard(MatchEventCard.RED, minute);
+        break;
+    }
   }
 
   public getEvents(): MatchEvent[] {
     return [...this._events];
+  }
+
+  public getPlayerTimesInField(): Record<string, number> {
+    const currentMinute = this.getTotalElapsed();
+    return {
+      ...this._teamA.getPlayerTimes(currentMinute),
+      ...this._teamB.getPlayerTimes(currentMinute),
+    };
+  }
+
+  public getFoulsByTeamAndPeriod(): Record<
+    string,
+    { FIRST_HALF: number; SECOND_HALF: number }
+  > {
+    const fouls: Record<string, { FIRST_HALF: number; SECOND_HALF: number }> =
+      {};
+
+    for (const event of this._events) {
+      if (event.type !== MatchEventType.FOUL) continue;
+
+      if (!fouls[event.teamId]) {
+        fouls[event.teamId] = { FIRST_HALF: 0, SECOND_HALF: 0 };
+      }
+
+      const period =
+        event.period === 'SECOND_HALF' ? 'SECOND_HALF' : 'FIRST_HALF';
+      fouls[event.teamId][period]++;
+    }
+
+    return fouls;
+  }
+
+  public getActivePunishments(): Record<
+    string,
+    { type: 'YELLOW' | 'RED'; minutesLeft: number }
+  > {
+    const currentMinute = this.getTotalElapsed();
+    return {
+      ...this._teamA.getActivePunishments(currentMinute),
+      ...this._teamB.getActivePunishments(currentMinute),
+    };
   }
 
   public static restore(props: {
