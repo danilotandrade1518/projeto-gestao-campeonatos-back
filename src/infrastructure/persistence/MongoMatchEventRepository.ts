@@ -30,4 +30,24 @@ export class MongoMatchEventRepository implements MatchEventRepository {
       })),
     );
   }
+
+  async getByMatchId(matchId: string): Promise<MatchEvent[]> {
+    const documents = await this.collection
+      .find({ matchId })
+      .sort({ timestamp: 1 })
+      .toArray();
+
+    return documents.map((doc) =>
+      MatchEvent.restore({
+        id: doc._id.toHexString(),
+        matchId: doc.matchId,
+        type: doc.type,
+        teamId: doc.teamId,
+        timestamp: new Date(doc.timestamp),
+        period: doc.period,
+        minute: doc.minute,
+        data: doc.data,
+      }),
+    );
+  }
 }

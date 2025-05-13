@@ -41,4 +41,26 @@ export class MatchEvent {
       MatchEventType.RED_CARD,
     ].includes(type);
   }
+
+  public static restore(props: {
+    id: string;
+    matchId: string;
+    type: MatchEventType;
+    teamId: string;
+    timestamp: Date;
+    period: string;
+    minute: number;
+    data: MatchEventData;
+  }): MatchEvent {
+    return new MatchEvent(
+      props.id,
+      props.matchId,
+      props.type,
+      props.teamId,
+      props.timestamp,
+      props.period,
+      props.minute,
+      props.data,
+    );
+  }
 }
