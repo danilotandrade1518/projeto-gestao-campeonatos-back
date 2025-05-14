@@ -1,6 +1,7 @@
 import { SqsQueueAdapter } from '../../../adapter/sqs/SqsQueueAdapter';
 import { GetBestGoalkeeperQueryHandler } from '../../../application/queries/GetBestGoalkeeperQueryHandler';
 import { GetClassificationQueryHandler } from '../../../application/queries/GetClassificationQueryHandler';
+import { GetMatchDetailsQueryHandler } from '../../../application/queries/GetMatchDetailsQueryHandler';
 import { GetMatchesTableQueryHandler } from '../../../application/queries/GetMatchesTableQueryHandler';
 import { GetMatchSnapshotQueryHandler } from '../../../application/queries/GetMatchSnapshotQueryHandler';
 import { GetPublicMatchDetailsQueryHandler } from '../../../application/queries/GetPublicMatchDetailsQueryHandler';
@@ -14,7 +15,6 @@ import { UpdateStatisticsUseCase } from '../../../application/usecases/UpdateSta
 import { VoteCraqueDaPartidaUseCase } from '../../../application/usecases/VoteCraqueDaPartidaUseCase';
 import { MongoBestGoalkeeperDAO } from '../../../infrastructure/dao/MongoBestGoalkeeperDAO';
 import { MongoClassificationDAO } from '../../../infrastructure/dao/MongoClassificationDAO';
-import { MongoMatchDAO } from '../../../infrastructure/dao/MongoMatchDAO';
 import { MongoMatchDetailsDAO } from '../../../infrastructure/dao/MongoMatchDetailsDAO';
 import { MongoMatchesTableDAO } from '../../../infrastructure/dao/MongoMatchesTableDAO';
 import { MongoTopScorerDAO } from '../../../infrastructure/dao/MongoTopScorerDAO';
@@ -30,7 +30,6 @@ const DepMongoMatchesTableDAO = new MongoMatchesTableDAO();
 const DepMongoClassificationDAO = new MongoClassificationDAO();
 const DepMongoTopScorerDAO = new MongoTopScorerDAO();
 const DepMongoBestGoalkeeperDAO = new MongoBestGoalkeeperDAO();
-const DepMongoMatchDAO = new MongoMatchDAO();
 const DepMongoMatchDetailsDAO = new MongoMatchDetailsDAO();
 
 const DepUpdateStatsInfraMessageQueuePublisher = new InfraMessageQueuePublisher(
@@ -79,10 +78,15 @@ export const getDependencies = () => ({
       DepMongoMatchesTableDAO,
     ),
     GetMatchSnapshotQueryHandler: new GetMatchSnapshotQueryHandler(
-      DepMongoMatchDAO,
+      DepMongoMatchRepository,
+      DepMongoMatchEventRepository,
     ),
     GetPublicMatchDetailsQueryHandler: new GetPublicMatchDetailsQueryHandler(
       DepMongoMatchDetailsDAO,
+    ),
+    GetMatchDetailsQueryHandler: new GetMatchDetailsQueryHandler(
+      DepMongoMatchRepository,
+      DepMongoMatchEventRepository,
     ),
     GetTopScorersQueryHandler: new GetTopScorersQueryHandler(
       DepMongoTopScorerDAO,

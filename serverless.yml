@@ -125,11 +125,18 @@ functions:
           path: /best-goalkeepers
           method: GET
 
+  getMatchDetails:
+    handler: src/presentation/lambdas/getMatchDetailsHandler.handler
+    events:
+      - httpApi:
+          path: /matches/{matchId}/details
+          method: GET
+
   getPublicMatchDetails:
     handler: src/presentation/lambdas/getPublicMatchDetailsHandler.handler
     events:
       - httpApi:
-          path: /matches/{matchId}/details
+          path: /matches/{matchId}/details/public
           method: GET
 
   getMatchesTable:
